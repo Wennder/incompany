@@ -1,3 +1,4 @@
 .htaccess
 /webroot/.htaccess
 /config/database.php
+/nbproject
