@@ -1,0 +1,947 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #FFFFFF url(../images/bgBody.jpg) repeat-x left top;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #787878;
+}
+
+h1, h2, h3 {
+    margin: 0;
+    padding: 0;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: normal;
+    color: #8A8A8A;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.8em;
+}
+
+h3 {
+    font-size: 1.6em;
+}
+
+p, ul, ol {
+    margin-top: 0;
+    line-height: 180%;
+}
+
+ul, ol {
+}
+
+a {
+    text-decoration: none;
+    color: #01BBEC;
+}
+
+a:hover {
+}
+
+#wrapper {
+    width: 960px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Header */
+
+#header {
+    width: 960px;
+    height: 110px;
+    margin: 0 auto;
+}
+
+/* Logo */
+
+#logo {
+    float: left;
+    width: 301px;
+    height: 110px;
+    padding: 0;
+    background: url(../images/bgLogo.jpg) no-repeat left bottom;
+}
+#logo a {
+    top:55px;
+    position:relative;
+}
+
+/* Menu */
+
+.menu-hv, .menu-vv { position: absolute; margin: 0; padding: 0; display: block; zoom: 1;}
+.menu-hv * ,    .menu-vv * { margin: 0; padding: 0 ; list-style: none}
+.menu-hv li ,   .menu-vv li { position: relative; line-height: 1.2em; vertical-align: top; width: auto; }
+.menu-hv a ,    .menu-vv a { display: block; zoom: 1; line-height: 1.2em }
+.menu-hv li ul, .menu-vv li ul { position: absolute; width: -moz-max-content; visibility: hidden; width: auto;  }
+.menu-hv ul{min-width: 50px; width: -moz-max-content;}
+.menu-hv li:hover ul,  .menu-vv li:hover ul,
+.menu-hv li.hover ul,  .menu-vv li.hover ul { visibility: visible }
+.menu-hv li:hover ul ul,  .menu-vv li:hover ul ul,
+.menu-hv li.hover ul ul,  .menu-vv li.hover ul ul { visibility: hidden }
+.menu-hv li li:hover ul,  .menu-vv li li:hover ul,
+.menu-hv li li.hover ul,  .menu-vv li li.hover ul { visibility: visible }
+.menu-hv li li:hover ul ul,  .menu-vv li li:hover ul ul,
+.menu-hv li li.hover ul ul,  .menu-vv li li.hover ul ul { visibility: hidden }
+.menu-hv li li li:hover ul,  .menu-vv li li li:hover ul,
+.menu-hv li li li.hover ul,  .menu-vv li li li.hover ul { visibility: visible }
+/* características horizontal-vertical */
+.menu-hv:after, .menu-hv.after { content: "."; line-height: 0px; clear: both; display: block; visibility: hidden}
+.menu-hv li { float: left; }		
+.menu-hv li ul li { float: none; }
+.menu-hv li ul li ul { position: absolute; width: -moz-max-content; left: 100%; top: 0; min-width: 50px; }
+/* características vertical-vertical */
+.menu-vv { float: left; }	
+.menu-vv li ul { left: 100%; top: 0; }
+/* ****************************************
+  ALTERE ABAIXO. defina a largura, cor, formatações, etc, dos itens do seu menu abaixo
+  ou apague as linhas se for definir em outro lugar
+*/
+.menu-hv li { width: auto; min-width:50px; padding: 5px; }
+.menu-vv li { width: 100px;}
+.menu-hv li a:hover { background-color: cyan }
+.menu-vv li a:hover { background-color: cyan }
+
+
+/* Micox Pseudo-class-css2 to IE (MXPC). Activate .hover and .first-child in IE 6
+   http://elmicox.blogspot.com/2008/03/ativando-hover-e-first-child-no-ie-6-um.html */
+* html * { color: expression( (function(who){ if(!who.MXPC){
+               who.MXPC = '1';
+           if(who.nodeName != 'A'){
+           who.onmouseenter=function(){ who.className += ' hover'};
+who.onmouseleave=function(){ who.className = who.className.replace(' hover','')}; }
+(who==who.parentNode.firstChild) ? who.className += ' first-child' : '' ;
+} } )(this) , 'auto') }
+
+/*FIM MENU*/
+
+/* Page */
+
+#page {
+    width: 960px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#page-bgtop {
+    padding: 20px 25px;
+}
+
+#page-bgbtm {
+}
+
+/* Content */
+
+#content {
+    float: right;
+    width: 630px;
+    padding: 10px;
+    background-color: #FFFFFF;
+}
+
+.novidades li{
+    list-style-image: url(../images/icon_ok.png);
+}
+.verMais{
+    text-align: right;
+    width: 232px;
+}
+.compromisso:hover{
+    background-color: #fcf5dd;
+}
+.error{
+    color : red;
+    margin-bottom: 10px;
+    display: block;
+
+
+}
+
+.post {
+    margin-bottom: 25px;
+    padding: 20px 0px;
+    background: #FFFFFF;
+}
+
+.post-bgtop {
+}
+
+.post-bgbtm {
+}
+
+.post .title {
+    height: 38px;
+    margin-bottom: 10px;
+    padding: 12px 0 0 20px;
+    background: #01BBEC;
+    letter-spacing: -.5px;
+    color: #FFFFFF;
+}
+
+.post .title a {
+    color: #FFFFFF;
+    border: none;
+}
+
+.post .meta {
+    padding-bottom: 5px;
+    padding-left: 20px;
+    text-align: left;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-style: italic;
+}
+
+.post .meta a {
+    color: #01BBEC;
+}
+
+.post .entry {
+    padding: 0px 20px 20px 20px;
+    padding-bottom: 20px;
+    text-align: justify;
+}
+
+.links {
+    display: block;
+    width: 100px;
+    height: 20px;
+    margin-top: 20px;
+    background: url(images/img05.jpg) no-repeat left top;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 10px;
+    color: #FFFFFF;
+}
+
+/* Sidebar */
+
+#sidebar {
+    float: left;
+    width: 240px;
+    min-height: 400px;
+    padding: 0px 0px 0px 0px;
+    color: #787878;
+    background: #FFFFFF;
+}
+
+#sidebar ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#sidebar li {
+    margin: 0;
+    padding: 0;
+}
+
+#sidebar li ul {
+    margin: 0px 15px;
+    padding-bottom: 30px;
+}
+
+#sidebar li li {
+    line-height: 35px;
+    border-bottom: 1px dashed #D1D1D1;
+    padding-left: 10px;
+}
+
+#sidebar li li span {
+    display: block;
+    margin-top: -20px;
+    padding: 0;
+    font-size: 11px;
+    font-style: italic;
+}
+
+#sidebar h2 {
+    height: 38px;
+    padding: 12px 0 0 20px;
+    background: #01BBEC;
+    letter-spacing: -.5px;
+    color: #FFFFFF;
+}
+
+#sidebar p {
+    margin: 0 0px;
+    padding: 0px 20px 20px 20px;
+    text-align: justify;
+}
+
+#sidebar a {
+    border: none;
+    color: #01BBEC;
+}
+
+#sidebar a:hover {
+    text-decoration: underline;
+    color: #8A8A8A;
+}
+
+/* Calendar */
+
+#calendar {
+}
+
+#calendar_wrap {
+    padding: 20px;
+}
+
+#calendar table {
+    width: 100%;
+}
+
+#calendar tbody td {
+    text-align: center;
+}
+
+#calendar #next {
+    text-align: right;
+}
+
+#avisoSistema{
+    background-image: url(/images/bgAviso.png);
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 70px;
+}
+/* Footer */
+
+#footer {
+    width: 960px;
+    height: 50px;
+    margin: 0 auto;
+    margin-bottom: 50px;
+    padding: 0px 0 15px 0;
+    border-top: 1px solid #DEDEDE;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#footer p {
+    margin: 0;
+    padding-top: 20px;
+    line-height: normal;
+    font-size: 9px;
+    text-transform: uppercase;
+    text-align: left;
+    color: #A0A0A0;
+    float:left;
+}
+#footer img{
+    float: right;
+}
+
+#footer a {
+    color: #8A8A8A;
+}
+
+/* Formulário */
+.input{
+    margin-left: 10px;
+}
+.FormMeioBloco{
+    width: 95px;
+}
+
+.Form1Bloco{
+    width: 205px;
+}
+.Form11Bloco{
+    width: 205px;
+    height: 300px;
+}
+
+.Form2Blocos{
+    width: 420px;
+}
+
+.Form4Blocos{
+    width: 850px;
+}
+
+.Form50per{
+    width: 49%;
+}
+.FormMetadeBloco{
+    width: 290px;
+}
+.FormLeft{
+    margin-left: 10px;
+    margin-right: 0.5%;
+    float: left;
+    position: relative;
+}
+.FormRight{
+    margin-left: 10px;
+    margin-right: 0.5%;
+    float: right;
+    clear:right;
+}
+.ladoaladoMeio{
+    margin-right: 5px;
+    margin-left: 5px;
+    float: left;
+
+
+}
+
+label{
+
+    display: block;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.input select{
+    display: block;
+    margin-top: 5px;
+}
+
+#file-original{
+    opacity: 0.0;
+    -moz-opacity: 0.0;
+    filter: alpha(opacity=00);
+    font-size:16px;
+    height: 21px;
+    width: 21px;
+
+}
+#file-falso{
+    border:none;
+    margin-bottom: 10px;
+}
+.bgUpload{
+    background:url(/images/SelectFolder.png) no-repeat;
+    float: left;
+    margin-bottom: 20px;
+}
+
+
+
+button{
+    margin-top:10px;
+    margin-left: 10px;
+}
+.botao{
+    margin-top: 10px;
+}
+
+.ladoalado{
+    margin-right: 5px;
+    margin-left: 10px;
+    float: left;
+}
+
+.borda{
+
+    border: 1px solid #DDDDDD;
+    padding: 10px;
+
+}
+.eticketTituloChamado{
+    color: #FF7F00;
+    font-weight: bold;
+    font-size: 13px;
+
+}
+
+.titulo{
+    color: #0073ea;
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 20px;
+}
+.tituloRel{
+    font-size: 17px;
+    margin-bottom: 15px;
+}
+
+.caixaPermissao{
+    width: 100%; 
+
+}
+
+.caixaPermissao fieldset{
+    width:45%;
+    float: left;
+} 
+
+.marcacao{
+    background-color: #FF4040;
+    font-style: italic
+
+}
+
+hr{
+    width: 80%;
+    border-style: solid;
+    border-color:#000000;
+    border-width: 1px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+ul li{
+    list-style: none;
+}
+ul li a{
+    text-decoration: none;
+}
+
+
+
+.hora{
+    width: 80px;
+}
+/* GRID */
+.grid_escuro{
+    background-color: #FFFFFF;
+}
+
+.grid_claro{
+    background-color: #F6F6F6;
+}
+.cellOk{
+
+}
+.cellAtencao{
+
+}
+.cellProblema{
+
+}
+
+.datagrid{
+    width: 100%;
+    border:0 none;
+}
+.datagrid thead{
+    background:url("../images/sort_row_bg.gif") repeat-x scroll 0 50% transparent;
+    height: 20px;
+}
+.datagrid thead th{
+    border:1px solid;
+    padding:0;
+    border-color: #F9F9F9 #D1CFCF #F9F9F9 #F9F9F9;
+}
+.datagrid tbody td{
+    padding:0px;
+    text-align: center;
+}
+.datagrid caption{
+    background: none repeat scroll 0 0 #6F8992;
+    color:#FFFFFF;
+    font-weight: bold;
+    height: 20px;
+}
+.datagrid tbody :hover{
+    background:#fcf5dd;
+
+}
+.grid_escuro{
+    background-color: #FFFFFF;
+}
+
+.grid_claro{
+    background-color: #F6F6F6;
+}
+/* Fim grid*/
+
+/* mensageiro*/
+#barraInferior{
+    height: 50px;
+    width: 100%;
+    position: fixed;
+    bottom:0;
+}
+#barraInferior .mensageiro{
+    width: 200px;
+    position: fixed;
+    right: 0;
+    bottom:0;
+    border-style: solid;
+    border-color: #787878;
+    border-width: 1px;
+    background-color: #FFF;
+}
+#barraInferior .menos{
+    background-image:url(/images/mais_menos.gif);
+    background-repeat: no-repeat;
+    background-position: -9px -18px;
+    width: 20px;
+    float: left;
+}
+#barraInferior .mais{
+    background-image:url(/images/mais_menos.gif);
+    background-repeat: no-repeat;
+    background-position: -9px 0;
+    width: 20px;
+    float: left;
+}
+#barraInferior .mensageiro .mensageiroTitulo{
+    width: 100%;
+    height:16px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    background-image:url(/images/fundoMensageiroTitulo.png);
+    background-repeat: repeat-x;
+
+
+}
+#barraInferior .mensageiro .mensageiroContatos{
+    width: 100%;
+}
+
+.tabelaMensageiro{
+    width: 100%;
+
+}
+.tabelaMensageiro thead{
+    background:url("../images/sort_row_bg.gif") repeat-x scroll 0 50% transparent;
+    height: 20px;
+}
+.tabelaMensageiro thead th{
+    padding:0;
+}
+.tabelaMensageiro tbody td{
+    padding:0;
+
+}
+.tabelaMensageiro caption{
+    background: none repeat scroll 0 0 #00BFFF;
+    color:#696969;
+    font-weight: bold;
+    height: 20px;
+}
+.tabelaMensageiro tbody :hover{
+    background:#fcf5dd;
+}
+/* Fim Mensageiro*/
+
+input [type='file']{
+    width: 50px;
+}
+
+.checkbox{
+    clear:both;
+    float:none;
+}
+.checkbox input{
+    clear: right;
+    float:left;
+}
+.checkbox label{
+    clear: right;
+    display: block;
+    float:left;
+}
+
+
+/* Menu */
+.menu
+{
+    width:100%;
+    height:50px;
+
+
+}
+
+#pcm{display:none;}
+ul.pureCssMenu ul{display:none}
+ul.pureCssMenu li:hover>ul{display:block}
+ul.pureCssMenu ul{position: absolute;left:-1px;top:98%;}
+ul.pureCssMenu ul ul{position: absolute;left:98%;top:-2px;}
+ul.pureCssMenu,ul.pureCssMenu ul {
+    margin:0px;
+    list-style:none;
+    padding:0px 2px 2px 0px;
+    background-color:#ffffff;
+    background-repeat:repeat;
+
+
+}
+ul.pureCssMenu table {border-collapse:collapse}
+ul.pureCssMenu {
+    width: 100%;
+    display:block;
+    zoom:1;
+    float: left;
+}
+ul.pureCssMenu ul{
+    border: 1px solid #AAAAAA;
+    width:149.1;
+}
+ul.pureCssMenu li{
+    display:block;
+    margin:2px 0px 0px 2px;
+    font-size:0px;
+
+
+}
+ul.pureCssMenu a:active, ul.pureCssMenu a:focus {
+    outline-style:none;
+}
+ul.pureCssMenu a, ul.pureCssMenu li.dis a:hover, ul.pureCssMenu li.sep a:hover {
+    display:block;
+    vertical-align:middle;
+    background-color:#ffffff;
+    border-width:0px;
+    border-color:#6655ff;
+    border-style:solid;
+    text-align:left;
+    text-decoration:none;
+    padding:4px;
+    _padding-left:0;
+    font:normal 11px Verdana;
+    color: #444444;
+    text-decoration:none;
+    cursor:default;
+}
+ul.pureCssMenu span{
+    overflow:hidden;
+}
+ul.pureCssMenu li {
+    float:left;
+
+}
+ul.pureCssMenu ul li {
+    float:none;
+
+
+}
+ul.pureCssMenu ul a {
+    text-align:left;
+    white-space:nowrap;
+}
+ul.pureCssMenu li.sep{
+    text-align:center;
+    padding:0px;
+    line-height:0;
+    height:100%;
+}
+ul.pureCssMenu li.sep span{
+    float:none;	padding-right:0;
+    width:5;
+    height:16;
+    display:inline-block;
+    background-color:#AAAAAA;	background-image:none;}
+ul.pureCssMenu ul li.sep span{
+    width:80%;
+    height:3;
+}
+ul.pureCssMenu li:hover{
+    position:relative;
+}
+ul.pureCssMenu li:hover>a{
+    background-color:#4792E6;
+    border-color:#665500;
+    border-style:solid;
+    font:normal 11px Verdana;
+    color: #ffffff;
+    text-decoration:none;
+}
+ul.pureCssMenu li a:hover{
+    position:relative;
+    background-color:#4792E6;
+    border-color:#665500;
+    border-style:solid;
+    font:normal 11px Verdana;
+    color: #ffffff;
+    text-decoration:none;
+}
+ul.pureCssMenu li.dis a {
+    color: #AAAAAA !important;
+}
+ul.pureCssMenu img {border: none;float:left;_float:none;margin-right:4px;width:16px;
+                    height:16px;
+}
+ul.pureCssMenu ul img {width:16px;
+                       height:16px;
+}
+ul.pureCssMenu img.over{display:none}
+ul.pureCssMenu li.dis a:hover img.over{display:none !important}
+ul.pureCssMenu li.dis a:hover img.def {display:inline !important}
+ul.pureCssMenu li:hover > a img.def  {display:none}
+ul.pureCssMenu li:hover > a img.over {display:inline}
+ul.pureCssMenu a:hover img.over,ul.pureCssMenu a:hover ul img.def,ul.pureCssMenu a:hover a:hover ul img.def,ul.pureCssMenu a:hover a:hover img.over,ul.pureCssMenu a:hover a:hover a:hover img.over{display:inline}
+ul.pureCssMenu a:hover img.def,ul.pureCssMenu a:hover ul img.over,ul.pureCssMenu a:hover a:hover ul img.over,ul.pureCssMenu a:hover a:hover img.def,ul.pureCssMenu a:hover a:hover a:hover img.def{display:none}
+ul.pureCssMenu a:hover ul,ul.pureCssMenu a:hover a:hover ul{display:block}
+ul.pureCssMenu a:hover ul ul{display:none}
+ul.pureCssMenu span{
+    display:block;
+    background-image:url(/images/arrv_anim_1.gif);
+    background-position:right center;
+    background-repeat: no-repeat;
+    padding-right:11px;}
+ul.pureCssMenu li:hover>a>span{	background-image:url(/images/arrv_anim_1o.gif);
+}
+ul.pureCssMenu a:hover span{	_background-image:url(/images/arrv_anim_1o.gif)}
+ul.pureCssMenu ul span,ul.pureCssMenu a:hover table span{background-image:url(/images/arr_double_1.gif)}
+ul.pureCssMenu ul li:hover > a span{	background-image:url(/images/arr_double_1o.gif);}
+ul.pureCssMenu table a:hover span,ul.pureCssMenu table a:hover a:hover span{background-image:url(/images/arr_double_1o.gif)}
+ul.pureCssMenu table a:hover table span{background-image:url(/images/arr_double_1.gif)}
+/*--------------------- FIM MENU ---------------------*/
+
+/*Css do printFichaCompleta*/
+
+.fontPrintficha{
+    font-size:14px !important;
+}
+/***************************************************************************************************************/
+/*********************Dash Board Eticket*******************************************/
+.EdashContent{
+    width: 100%;
+    height: 500px;
+    position: relative;
+}
+.EdashAbertos{
+    width: 49%;
+    height: 100%;
+    float: left;
+    border: 1px solid #4F4F4F;
+    position: relative;
+}
+.EdashDireito{
+    width: 50%;
+    height: 100%;
+    float: right;
+    /* border: 1px solid #FF0000;*/
+    position: relative;
+}
+.EdashPrevisao{
+    width: 100%;
+    height: 50%;
+    border: 1px solid #4F4F4F;
+    position: relative;
+    margin-bottom: 1%;
+}
+.EdashOutro{
+    width: 100%;
+    height: 49%;
+    border: 1px solid #4F4F4F;
+    position: relative;
+}
+.gridAbertos{
+    border: 1px solid #E8E8E8;
+    background-color: #fcf5dd;
+    width: 99%;
+    min-height: 50px;
+    margin-bottom: 5px;
+}
+.EdashBotao{
+    background-image: url(/images/tel.png);
+    background-repeat: no-repeat;
+    background-position:top;
+    width: 90px;
+    height: 90px;
+}
+
+
+.dashScroll{
+
+    height: 452px;
+}
+/********************************************************************************/
+/***************************Começo DashBoard Comercial***************************/
+.CoDashContent{
+    width: 100%;
+    height: 500px;
+
+}
+
+
+.CoDashSup{
+    width: 100%;
+    height: 49.5%;
+    margin-bottom: 1%;
+
+
+}
+.CodashSupDir{
+    width: 49.5%;
+    height: 100%;
+    float: left;
+    border: 1px solid #333;
+}
+.CodashSupEsq{
+    width: 49.5%;
+    height: 100%;
+    float: right;
+    border: 1px solid #333;
+}
+
+
+.CoDashInf{
+    width: 100%;
+    height: 49.5%;
+
+}
+.CodashInfDir{
+    width:49.5%;
+    height: 100%;
+    float: left;
+    border:1px solid #333;
+}
+.CodashInfEsq{
+    width:49.5%;
+    height: 100%;
+    float: right;
+    border:1px solid #333;
+}
+
+.dashtitulo{
+    color: #fff;
+    font-size: 20px;
+    font-family: arial;
+    background-color: #00BFFF;
+    text-shadow: 0 1px 0 #777777;
+    box-shadow: 0 1px 5px #00BFFF;
+    margin-bottom: 1%;
+}
+
+.boxEquipe{
+    width:22%;
+    border:1px solid #333;
+    height:210px;
+    float: left;
+    position: relative;
+    background-image: url("/images/bgBoxEquipe.png");
+    background-repeat: repeat-x;
+    margin: 1%;
+}
+/***************************Fim comercial DashBoard**********************************************/
+/* Impressão */
+@media print {
+    body {
+        visibility:hidden;
+
+    }
+    * {
+        background: white!important;
+        color: black;
+        border-width: 0!important;
+    }
+    #sidebar{
+        display: none;
+        width: 1px;
+
+    }
+    #header{
+        display: none;
+        height: 1px;
+        width: 100%;
+    }
+    #content{
+        visibility: visible;
+        width: 100%;
+
+    }
+}

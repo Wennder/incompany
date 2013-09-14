@@ -1,0 +1,54 @@
+.ui-tabs { 
+	position: relative;
+}
+.ui-tabs-nav {
+	height: 26px;	
+}
+.ui-tabs .ui-tabs-nav {
+	padding: 0;
+	margin: 0 20px 20px 10px;
+	border-bottom: thin solid #dae3e7;
+}
+.ui-tabs .ui-tabs-nav li {
+	float: left;
+	width: auto;
+	list-style: none;
+	margin: 0;
+	padding: 8px 30px 8px 10px;
+	cursor:pointer;
+	background: #c1c1c1;
+	border-left: 7px solid #b7b7b7;	
+}
+.ui-tabs .ui-tabs-nav li a {
+	font-family: "DroidSansRegular";
+	color: #fff;
+	font-size: 13px;
+	display: block;
+	text-decoration: none;
+	text-align:center;
+	line-height: 10px;
+}
+.ui-tabs .ui-tabs-nav li:hover,
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+	background: #1a719d;
+	border-left: 7px solid #155b7e;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a, 
+.ui-tabs .ui-tabs-nav li.ui-state-disabled a, 
+.ui-tabs .ui-tabs-nav li.ui-state-processing a { 
+	
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+	background: #1a719d;
+	border-left: 7px solid #155b7e;
+}
+.ui-tabs .ui-tabs-panel {
+	display: block; 
+}
+.ui-tabs .ui-tabs-hide { 
+	display: none !important; 
+}
+
+.ui-tabs-panel {	
+	margin: 0 0 20px 0;
+}

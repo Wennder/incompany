@@ -1,0 +1,440 @@
+<?php
+
+class ImportacoesHelper extends Helper {
+
+    //Numero do Processo caso precise ser usada por alguma função iniciadora;
+    private $idProcesso;
+    //Dados do processo
+    public $processo = array();
+    //Todos os produtos da importação
+    public $produtos = array();
+    //Grava na classe as formula de cálculo a serem usadas.
+    public $formulas = array();
+    //Mantem dados das adições salvas na classe
+    public $adicoes = array();
+
+    public function step1($processo = null) {
+        if ($processo != null) {
+            $this->idProcesso = $processo;
+            $this->setProcesso();
+
+            $this->setProdutos();
+
+            $this->setPesoTotal();
+
+            $this->calcFob();
+            $this->calcCif();
+
+            $this->updateTerminal();
+
+            $this->rateio();
+
+            $this->setFormulas();
+            $i = 0;
+            while ($i < count($this->produtos)) {
+                $this->getCif($i);
+                $this->calculaII($i);
+                $this->calculaIPI($i);
+                $i++;
+            }
+            $this->salvaProdutos();
+        }
+    }
+
+    public function step2($processo) {
+        $this->idProcesso = $processo;
+        $this->setProcesso();
+        $this->setProdutos();
+
+        $this->setFormulas();
+
+        $i = 0;
+        while ($i < count($this->produtos)) {
+            $this->getCif($i);
+            $this->calculaPis($i);
+            $this->calculaCofins($i);
+            $i++;
+        }
+        $this->salvaProdutos();
+    }
+
+    public function step3($processo) {
+        $this->idProcesso = $processo;
+        $this->setProcesso();
+        $this->setProdutos();
+
+        $this->setFormulas();
+
+        $i = 0;
+        while ($i < count($this->produtos)) {
+            $this->getCif($i);
+            $this->calculaICMS($i);
+            $i++;
+        }
+
+        $this->salvaProdutos();
+    }
+
+    public function calcFob() {
+
+        $this->processo["fob"] = $this->fob($this->idProcesso) * $this->processo["txCambio"];
+
+        return $this->processo["fob"];
+    }
+
+    public function calcCif() {
+        $this->processo["cif"] = $this->processo["fob"] + $this->processo["frete"] + ($this->processo["thc"]) + $this->processo["seguro"];
+        return $this->processo["cif"];
+    }
+
+    public function setPesoTotal() {
+        foreach ($this->produtos as $produto) {
+            $this->processo["pesoTotal"] = $this->processo["pesoTotal"] + ($produto["peso"] * $produto["qtd"]);
+        }
+    }
+
+    public function updateTerminal() {
+
+        $importacoes_nacionalizacao = ClassRegistry::load("importacoes_nacionalizacao", "Model");
+        $importacoes_configterminais = ClassRegistry::load("importacoes_configterminais", "Model");
+
+        $processo = $this->idProcesso;
+        $condicao = array(
+            "conditions" => array(
+                "processo" => $processo,
+                "auto" => "1"
+            )
+        );
+        $importacoes_nacionalizacao->deleteAll($condicao);
+
+        $condicaoCustos = array(
+            "conditions" => array(
+                "terminais_id" => $this->processo["terminalAtraque"]
+            )
+        );
+        $custosTerminal = $importacoes_configterminais->all($condicaoCustos);
+
+        foreach ($custosTerminal as $custo) {
+            if ($custo["custo"]["multiplicacao"] == 0) {
+                $valorTotal = $custo["valorUnitario"];
+            } elseif ($custo["custo"]["multiplicacao"] == 1) {
+                $valorTotal = $custo["valorUnitario"] * $this->processo["qtdContainer"];
+            } else {
+                $valorTotal = $custo["valorUnitario"] * $this->processo["qtdCarretas"];
+            }
+            $custos[] = array(
+                "processo" => $processo,
+                "custo_id" => $custo["custo_id"],
+                "valorUnitario" => $custo["valorUnitario"],
+                "valorTotal" => $valorTotal,
+                "auto" => "1"
+            );
+        }
+        $importacoes_nacionalizacao->saveAll($custos);
+    }
+
+    public function rateio() {
+        $i = 0;
+        while ($i < count($this->produtos)) {
+            $this->produtos[$i]["fob"] = (($this->produtos[$i]["precoExterior"] * $this->produtos[$i]["qtd"]) * $this->processo["txCambio"]);
+
+            $fatorFob = $this->produtos[$i]["fob"] / $this->processo["fob"];
+            $fatorPeso = ($this->produtos[$i]["peso"] * $this->produtos[$i]["qtd"]) / $this->processo["pesoTotal"];
+
+            $this->produtos[$i]["frete"] = $this->processo["frete"] * $fatorPeso;
+
+            $this->produtos[$i]["thc"] = $this->processo["thc"] * $fatorFob;
+            $this->produtos[$i]["seguro"] = $this->processo["seguro"] * $fatorFob;
+
+            $this->produtos[$i]["cif"] = ($this->produtos[$i]["fob"] + $this->produtos[$i]["frete"] + $this->produtos[$i]["thc"] + $this->produtos[$i]["seguro"]);
+
+            $fatorCif = $this->produtos[$i]["cif"] / $this->processo["cif"];
+
+            $this->produtos[$i]["taxaSiscomex"] = $this->processo["taxaSiscomex"] * $fatorCif;
+
+            $this->produtos[$i]["despesasAduaneiras"] = $this->processo["despesasAduaneiras"] * $fatorCif;
+
+            $i++;
+        }
+    }
+
+    public function getCif($i) {
+        $this->produtos[$i]["fob"] = (($this->produtos[$i]["precoExterior"] * $this->produtos[$i]["qtd"]) * $this->processo["txCambio"]);
+        $this->produtos[$i]["cif"] = ($this->produtos[$i]["fob"] + $this->produtos[$i]["frete"] + $this->produtos[$i]["thc"] + $this->produtos[$i]["seguro"]);
+    }
+
+    public function calculaII($i) {
+        $formula = $this->formulas["II"];
+        $cif = $this->produtos[$i]["cif"];
+        $aliqIi = $this->produtos[$i]["aliqIi"] / 100;
+
+        eval("\$resultado = " . $formula);
+        $this->produtos[$i]["ii"] = $resultado;
+    }
+
+    public function calculaIPI($i) {
+
+        $formula = $this->formulas["IPIEntrada"];
+        $cif = $this->produtos[$i]["cif"];
+        $ii = $this->produtos[$i]["ii"];
+        $aliqIpi = $this->produtos[$i]["aliqIpi"] / 100;
+
+        eval("\$resultado = " . $formula);
+        $this->produtos[$i]["ipiEntrada"] = $resultado;
+    }
+
+    public function calculaPis($i) {
+        $formula = $this->formulas["PIS"];
+        $aliqPis = $this->produtos[$i]["aliqPis"] / 100;
+
+        $xis = $this->calcX($i);
+        $cif = $this->produtos[$i]["cif"];
+
+
+        eval("\$resultado = " . $formula);
+        $this->produtos[$i]["pis"] = $resultado;
+    }
+
+    public function calculaCofins($i) {
+        $formula = $this->formulas["COFINS"];
+        $aliqCofins = $this->produtos[$i]["aliqCofins"] / 100;
+        $xis = $this->calcX($i);
+        $cif = $this->produtos[$i]["cif"];
+        eval("\$resultado = " . $formula);
+        $this->produtos[$i]["cofins"] = $resultado;
+    }
+
+    public function calcX($i) {
+        $icms = $this->produtos[$i]["aliqIcmsInterna"] / 100;
+        $ii = $this->produtos[$i]["aliqIi"] / 100;
+        $ipi = $this->produtos[$i]["aliqIpi"] / 100;
+        $pis = $this->produtos[$i]["aliqPis"] / 100;
+        $cofins = $this->produtos[$i]["aliqCofins"] / 100;
+
+        return (1 + $icms * ($ii + $ipi * (1 + $ii))) / ((1 - $pis - $cofins) * (1 - $icms));
+    }
+
+    public function calculaICMS($i) {
+        
+        $formula = $this->formulas["ICMSEntrada"];
+        $aliqIcmsInterna = $this->produtos[$i]["aliqIcmsInterna"] / 100;
+        $aliqIcmsInterestadual = $this->produtos[$i]["aliqIcmsInterestadual"] / 100;
+        $pis = $this->produtos[$i]["pis"];
+        $cofins = $this->produtos[$i]["cofins"];
+        
+        $despesasAduaneiras = $this->produtos[$i]["despesasAduaneiras"];
+
+        $taxaSiscomex = $this->produtos[$i]["taxaSiscomex"];
+        $ii = $this->produtos[$i]["ii"];
+        $ipi = $this->produtos[$i]["ipiEntrada"];
+        $cif = $this->produtos[$i]["cif"];
+        $complementoInterno = $this->calcComplemento($aliqIcmsInterna);
+        $complementoInterestadual = $this->calcComplemento($aliqIcmsInterestadual);
+
+        eval($formula);
+        $this->produtos[$i]["baseIcmsEntrada"] = $baseIcmsEntrada;
+        $this->produtos[$i]["icmsEntrada"] = $icmsEntrada;
+        
+        //Faz os calculos do ICMS da NF de saída
+        $formula = $this->formulas["ICMSSaida"];
+
+        switch ($this->processo["destinacao"]) {
+            default:
+            case "1":
+                $aliqIcms = $this->produtos[$i]["aliqIcmsInterestadual"];
+                $complemento = $this->calcComplemento($aliqIcmsInterna);
+                break;
+            case "2":
+                $aliqIcms = $this->produtos[$i]["aliqIcmsInterestadual"];
+                $complemento = $this->calcComplemento($aliqIcmsInterestadual);
+                break;
+            case "3":
+                $aliqIcms = $this->produtos[$i]["aliqIcmsInterestadual"];
+                $aliqIcms = $aliqIcms*(1+($this->produtos[$i]["aliqIpi"]));
+                $complemento = $this->calcComplemento($aliqIcmsInterna);
+                break;
+        }
+
+
+        if ($this->processo["lucroReal"] == 0) {
+            $pis = 0;
+            $cofins = 0;
+        }
+        if ($this->processo["industrial"] == 0) {
+            $ipi = 0;
+        }
+
+        if ($this->processo["enquadramento"] == 1) {
+            $aliqIcms = $this->produtos[$i]["aliqIcmsInterestadual"];
+            $complemento = $this->calcComplemento($aliqIcmsInterna);
+        }
+
+
+        eval($formula);
+        $this->produtos[$i]["baseIcmsSaida"] = $baseIcmsSaida;
+        $this->produtos[$i]["icmsSaida"] = $icmsSaida;
+        
+    }
+
+    public function calcComplemento($aliquota) {
+        return (1 - $aliquota);
+    }
+
+    public function setProcesso() {
+        $modelProcessos = ClassRegistry::load("importacoes_processos", "Model");
+
+        $this->processo = $modelProcessos->first(array("conditions" => array("processo" => $this->idProcesso)));
+
+        $modelNacionalizacao = ClassRegistry::load("importacoes_nacionalizacao", "Model");
+        $condicao = array(
+            "conditions" => array(
+                "processo" => $this->idProcesso
+            ),
+            "fields" => array("sum(valorTotal) as soma")
+        );
+        $result = $modelNacionalizacao->first($condicao);
+        $this->processo["despesasAduaneiras"] = $result["soma"];
+    }
+
+    public function setProdutos() {
+        $model = ClassRegistry::load("importacoes_produtos", "Model");
+
+        $this->produtos = $model->all(array("conditions" => array("processo" => $this->idProcesso)));
+    }
+
+    public function salvaProdutos() {
+        $model = ClassRegistry::load("importacoes_produtos", "Model");
+
+        $model->saveAll($this->produtos);
+    }
+
+    public function setFormulas() {
+        $model = ClassRegistry::load("importacoes_operacoes", "Model");
+
+        $this->formulas = $model->first(array("conditions" => array("id" => $this->processo["operacao"])));
+    }
+
+    public function formatMoeda($valor = 0, $prefix = "R$") {
+        $valor = number_format($valor, 2, ',', '.');
+        return $prefix . " " . $valor;
+    }
+
+    public function overView($processo) {
+        //Montar array com dados principais do processo
+    }
+
+    public function countAdicoes($processo = null) {
+        $model = ClassRegistry::load("importacoes_produtos", "Model");
+
+        $condicao = array(
+            "fields" => array(
+                "*"
+            ),
+            "conditions" => array(
+                "processo" => $processo
+            ),
+            "groupBy" => "ncm"
+        );
+        return count($model->all($condicao));
+    }
+
+    public function fob($processo = null, $adicao = null, $item = null, $metodo = "processo", $formatado = false, $cambio = false) {
+        $model = ClassRegistry::load("importacoes_produtos", "Model");
+
+        switch ($metodo) {
+            case "item":
+                $fob = $model->firstById($item);
+                $fob = $fob["precoExterior"] * $fob["qtd"];
+                break;
+            case "adicao":
+                $condicao = array(
+                    "conditions" => array(
+                        "ncm" => $adicao,
+                        "processo" => $processo
+                    )
+                );
+                $itens = $model->all($condicao);
+                foreach ($itens as $item) {
+                    $fob = $fob + ($item["precoExterior"] * $item["qtd"]);
+                }
+                break;
+            case "processo":
+                $condicao = array(
+                    "conditions" => array(
+                        "processo" => $processo
+                    )
+                );
+                $itens = $model->all($condicao);
+                foreach ($itens as $item) {
+                    $fob = $fob + ($item["precoExterior"] * $item["qtd"]);
+                }
+                break;
+        }
+        if ($formatado) {
+            return $this->formatMoeda($fob, $item["estoque_produtos"]["moeda"]["simbolo"]);
+        } else {
+            if ($cambio) {
+                return $this->cambio($processo, $fob);
+            } else {
+                return $fob;
+            }
+        }
+    }
+
+    public function cambio($processo, $fob) {
+        $model = ClassRegistry::load("importacoes_processos", "Model");
+
+        $condicao = array(
+            "conditions" => array(
+                "processo" => $processo
+            ),
+            "fields" => array(
+                "txCambio"
+            )
+        );
+        $processo = $model->first($condicao);
+
+        return $fob * $processo["txCambio"];
+    }
+
+    public function sumProcesso($processo, $campo) {
+        $model = ClassRegistry::load("importacoes_produtos", "Model");
+
+        $condicao = array(
+            "conditions" => array(
+                "processo" => $processo
+            ),
+            "fields" => array("$campo as soma")
+        );
+        $soma = $model->first($condicao);
+        return $soma["soma"];
+    }
+
+    public function sumAdicao($processo, $ncm, $campo) {
+        $model = ClassRegistry::load("importacoes_produtos", "Model");
+
+        $condicao = array(
+            "conditions" => array(
+                "processo" => $processo,
+                "ncm" => $ncm
+            ),
+            "fields" => array("$campo as soma")
+        );
+        $soma = $model->first($condicao);
+        return $soma["soma"];
+    }
+
+    public function getAliquotas($ncm) {
+        $model = ClassRegistry::load("sys_ncm", "Model");
+
+        $condicao = array(
+            "conditions" => array(
+                "ncm" => $ncm
+            )
+        );
+        return $model->first($condicao);
+    }
+
+}
+
+?>

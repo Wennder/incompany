@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Teste" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="16790adb-64b6-4799-aca7-0cdc11a2c597">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="processo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from importacoes_custosFechamento where processo=$P{processo}]]>
+	</queryString>
+	<variable name="variable1" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<detail>
+		<band height="253">
+			<line>
+				<reportElement uuid="063aefdf-914d-4b8a-814a-6ef2479ddcb6" x="277" y="22" width="1" height="184"/>
+			</line>
+			<staticText>
+				<reportElement uuid="4938939a-820d-40b9-9174-fe0d7e9b9d2c" x="0" y="0" width="555" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NOME DO CLIENTE]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>
